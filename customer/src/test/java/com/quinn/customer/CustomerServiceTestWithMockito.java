@@ -42,7 +42,7 @@ class CustomerServiceTestWithMockito {
         CustomerRegistrationRequest request = new CustomerRegistrationRequest(
                 "lu",
                 "qiuyi",
-                "qiuyi@gmail.com"
+                "qiuyiNotFraudulent@gmail.com"
         );
         Customer customer = Customer.builder()
                 .firstName(request.firstName())
@@ -53,7 +53,7 @@ class CustomerServiceTestWithMockito {
         Mockito.when(customerRepository.saveAndFlush(customer)).thenReturn(customer);//打桩
 
         Mockito.when(restTemplate.getForObject(
-                        "http://localhost:8081/api/v1/fraud-check/{customerId}",//打桩
+                        "http://localhost:8082/api/v1/fraud-check/{customerId}",//打桩
                         FraudCheckResponse.class,
                         customer.getId()))
                 .thenReturn(new FraudCheckResponse(false));
@@ -75,7 +75,7 @@ class CustomerServiceTestWithMockito {
         CustomerRegistrationRequest request = new CustomerRegistrationRequest(
                 "lu",
                 "qiuyi",
-                "qiuyi@gmail.com"
+                "qiuyiIsFraudulent@gmail.com"
         );
         Customer customer = Customer.builder()
                 .firstName(request.firstName())
@@ -86,7 +86,7 @@ class CustomerServiceTestWithMockito {
         Mockito.when(customerRepository.saveAndFlush(customer)).thenReturn(customer);//打桩
 
         Mockito.when(restTemplate.getForObject(
-                        "http://localhost:8081/api/v1/fraud-check/{customerId}",//打桩
+                        "http://localhost:8082/api/v1/fraud-check/{customerId}",//打桩
                         FraudCheckResponse.class,
                         customer.getId()))
                 .thenReturn(new FraudCheckResponse(true));
@@ -111,7 +111,7 @@ class CustomerServiceTestWithMockito {
         CustomerRegistrationRequest request = new CustomerRegistrationRequest(
                 "lu",
                 "qiuyi",
-                "qiuyi@gmail.com"
+                "qiuyiTimout2@gmail.com"
         );
         Customer customer = Customer.builder()
                 .firstName(request.firstName())
@@ -122,10 +122,9 @@ class CustomerServiceTestWithMockito {
         Mockito.when(customerRepository.saveAndFlush(customer)).thenReturn(customer);//打桩
 
         Mockito.when(restTemplate.getForObject(
-                        "http://localhost:8081/api/v1/fraud-check/{customerId}",//打桩
+                        "http://localhost:8082/api/v1/fraud-check/{customerId}",//打桩
                         FraudCheckResponse.class,
                         customer.getId()))
-                .thenCallRealMethod()
                 .thenThrow(new ResourceAccessException("Read timed out", new SocketTimeoutException("Read timed out")));
 
         //when
@@ -137,7 +136,6 @@ class CustomerServiceTestWithMockito {
         ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);
         verify(customerRepository).saveAndFlush(customerArgumentCaptor.capture());
         Customer captorValue = customerArgumentCaptor.getValue();
-
         assertThat(captorValue).isEqualTo(customer);
 
     }

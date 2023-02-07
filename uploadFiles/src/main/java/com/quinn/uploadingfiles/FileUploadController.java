@@ -56,31 +56,31 @@ public class FileUploadController {
     @PostMapping("/")
     public String handleFileUpload(@RequestParam("file") MultipartFile file,
                                    RedirectAttributes redirectAttributes) throws IOException {
-
         System.out.println("file contentType: " + file.getContentType());
         System.out.println("inputStream: " + bytesToHexString(file.getInputStream().readAllBytes()));
+
         //限制文件类型的集合
         Set<String> fileType = Set.of("jpg");
-
         //检查文件类型
         String type = FileTypeUtil.getType(file.getInputStream());
         System.out.println("type: " + type);
 
         Boolean canStoreFile = Optional.ofNullable(type).map(fileType::contains).orElse(false)
                 || "text/plain".equals(file.getContentType());
-
         System.out.println("canStoreFile: " + canStoreFile);
 
         // 判断是否在限制的文件类型集合中，如果为null，直接返回false
         if (!canStoreFile) {
-            redirectAttributes.addFlashAttribute("message",
-                    "You failed to uploaded " + file.getOriginalFilename() + "," +
-                            "with type " + type + ".");
+            redirectAttributes.addFlashAttribute(
+                    "message",
+                    "You failed to uploaded " + file.getOriginalFilename() + "," + "with type " + type + ".");
 
             System.out.println("faild uploaded" + file.getOriginalFilename());
         } else {
             storageService.store(file);
-            redirectAttributes.addFlashAttribute("message",
+
+            redirectAttributes.addFlashAttribute(
+                    "message",
                     "You successfully uploaded " + file.getOriginalFilename() + "!");
 
             System.out.println("successfully uploaded" + file.getOriginalFilename());

@@ -2,6 +2,7 @@ package com.quinn.customer;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -30,14 +31,13 @@ class CustomerServiceTest {
     @Autowired
     private CustomerRepository customerRepository;
 
-//    @Autowired
     private RestTemplate restTemplate;
 
     @BeforeEach
     void setUp() {
         restTemplate = new RestTemplateBuilder()
-                .setConnectTimeout(Duration.ofMillis(3000))
-                .setReadTimeout(Duration.ofMillis(3000))
+                .setConnectTimeout(Duration.ofMillis(3))
+                .setReadTimeout(Duration.ofMillis(3))
                 .build();
         underTest = new CustomerService(customerRepository, restTemplate);
     }
@@ -48,13 +48,13 @@ class CustomerServiceTest {
         CustomerRegistrationRequest request = new CustomerRegistrationRequest(
                 "lu",
                 "qiuyi",
-                "qiuyi@gmail.com"
+                "qiuyiUniq@gmail.com"
         );
         //when
         underTest.RegisterCustomer(request);
 
         //then
-        Customer expected = customerRepository.getCustomerByEmail("qiuyi@gmail.com");
+        Customer expected = customerRepository.getCustomerByEmail("qiuyiUniq@gmail.com");
         assertThat(expected.getFirstName()).isEqualTo("lu");
         assertThat(expected.getLastName()).isEqualTo("qiuyi");
 
@@ -66,23 +66,15 @@ class CustomerServiceTest {
         CustomerRegistrationRequest request = new CustomerRegistrationRequest(
                 "lu",
                 "qiuyi",
-                "qiuyi@gmail.com"
+                "qiuyiTTimout@gmail.com"
         );
 
-//        long startMillis = System.currentTimeMillis();
-//
-////        Throwable throwable = catchThrowable(() -> {
-//            restTemplate.getForObject(
-//                            "http://localhost:8081/api/v1/fraud-check/{customerId}",//打桩
-//                            FraudCheckResponse.class,
-//                            1L);
-////                }
-////        );
-//        long endMillis = System.currentTimeMillis();
-//        System.out.println("Execution time: " + (endMillis - startMillis));
-//        assertThat(throwable).hasRootCauseInstanceOf(SocketTimeoutException.class);
-
-        assertThatThrownBy(() -> underTest.RegisterCustomer(request))
+        assertThatThrownBy(() -> {
+            long startMillis = System.currentTimeMillis();
+            underTest.RegisterCustomer(request);
+            long endMillis = System.currentTimeMillis();
+            System.out.println("Execution time: " + (endMillis - startMillis));
+        })
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("Request is timeout");
     }

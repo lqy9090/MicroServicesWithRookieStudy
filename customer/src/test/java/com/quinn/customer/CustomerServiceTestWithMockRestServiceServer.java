@@ -58,11 +58,11 @@ class CustomerServiceTestWithMockRestServiceServer {
         CustomerRegistrationRequest request = new CustomerRegistrationRequest(
                 "lu",
                 "qiuyi",
-                "qiuyi@gmail.com"
+                "qiuyiM2@gmail.com"
         );
 
         mockServer.expect(
-                        requestTo("http://localhost:8081/api/v1/fraud-check/1"))
+                        requestTo("http://localhost:8082/api/v1/fraud-check/1"))
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(withStatus(HttpStatus.OK)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -81,11 +81,11 @@ class CustomerServiceTestWithMockRestServiceServer {
         CustomerRegistrationRequest request = new CustomerRegistrationRequest(
                 "lu",
                 "qiuyi",
-                "qiuyi@gmail.com"
+                "qiuyiTimout3@gmail.com"
         );
 
         mockServer.expect(
-                        requestTo("http://localhost:8081/api/v1/fraud-check/1"))
+                        requestTo("http://localhost:8082/api/v1/fraud-check/1"))
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(request1 -> {
                     try {
