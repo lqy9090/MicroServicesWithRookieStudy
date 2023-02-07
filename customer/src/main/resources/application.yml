@@ -5,9 +5,14 @@ spring:
   application:
     name: customer
   datasource:
-    password: password
-    url: jdbc:postgresql://localhost:5432/customer
-    username: amigoscode
+    pgsql:
+      jdbcUrl: jdbc:postgresql://localhost:5432/customer
+      password: password
+      username: amigoscode
+    h2:
+      jdbcUrl: jdbc:h2:mem:testdb-dev-enviroment
+      password: hello
+      username: hello
   jpa:
     hibernate:
       ddl-auto: update
@@ -16,3 +21,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
       show-sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2
