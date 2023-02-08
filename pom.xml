@@ -12,6 +12,7 @@
         <module>customer</module>
         <module>fraud</module>
         <module>uploadFiles</module>
+        <module>schedulingTasks</module>
     </modules>
 
     <properties>
