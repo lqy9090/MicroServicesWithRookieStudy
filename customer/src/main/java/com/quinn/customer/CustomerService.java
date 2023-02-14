@@ -3,11 +3,14 @@ package com.quinn.customer;
 import com.quinn.customer.exception.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
+import javax.transaction.Transactional;
 import java.net.SocketTimeoutException;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -17,8 +20,17 @@ import java.util.Optional;
  **/
 
 @Service
-public record CustomerService(CustomerRepository repository, RestTemplate restTemplate) {
+public class CustomerService{
     private final static Logger LOGGER = LoggerFactory.getLogger(CustomerService.class);
+
+    private CustomerRepository repository;
+    private RestTemplate restTemplate;
+
+    @Autowired
+    public CustomerService(CustomerRepository repository, RestTemplate restTemplate) {
+        this.repository = repository;
+        this.restTemplate = restTemplate;
+    }
 
     public void RegisterCustomer(CustomerRegistrationRequest request) {
         Customer customer = Customer.builder()
@@ -80,22 +92,34 @@ public record CustomerService(CustomerRepository repository, RestTemplate restTe
         repository.deleteById(CustomerId);
     }
 
-//    //
-//    public List<Customer> getCustomersByConditionWithMethodName(ClassicCustomersRequest request) {
-//        System.out.println("getCustomers condition: " + request);
-//        List<Customer> customers = customerRepository.findCustomersByNameAndEmailOrderByIdDesc(request.getName(), request.getEmail());
-//        return customers;
-//    }
-//
-//    public List<Customer> getCustomersByConditionWithJPQL(ClassicCustomersRequest request) {
-//        System.out.println("getCustomers condition: " + request);
-//        List<Customer> customers = customerRepository.findCustomersByConditionOrderByIdDesc(request.getName(), request.getEmail());
-//        return customers;
-//    }
-//
-//    public List<Customer> getCustomersByConditionWithNativeSQL(ClassicCustomersRequest request) {
-//        System.out.println("getCustomers condition: " + request);
-//        List<Customer> customers = customerRepository.findCustomersByConditionOrderByIdDesc2(request.getName(), request.getEmail());
-//        return customers;
-//    }
+
+    public List<Customer> getCustomersByConditionWithMethodName(ClassicCustomersRequest request) {
+        System.out.println("getCustomers condition: " + request);
+        List<Customer> customers = repository.findCustomersByFirstNameIsContainingAndEmailIsContainingOrderByIdDesc(request.getFirstName(), request.getEmail());
+        return customers;
+    }
+
+    public List<Customer> getCustomersByConditionWithJPQL(ClassicCustomersRequest request) {
+        System.out.println("getCustomers condition: " + request);
+        List<Customer> customers = repository.findCustomersByConditionOrderByIdDesc(request.getFirstName(), request.getEmail());
+        return customers;
+    }
+
+    public List<Customer> getCustomersByConditionWithNativeSQL(ClassicCustomersRequest request) {
+        System.out.println("getCustomers condition: " + request);
+        List<Customer> customers = repository.findCustomersByConditionOrderByIdDesc2(request.getFirstName(), request.getEmail());
+        return customers;
+    }
+
+    @Transactional
+    public void RegisterCustomerAnResetEmail(Customer customer) {//the method unreasonable,just used to learn transaction usage
+
+        System.out.println("before save: " + customer);
+        //register
+        repository.saveAndFlush(customer);
+        System.out.println("after save: " + customer);
+
+        //update
+        repository.updateCustomerEmailById("update@emial", customer.getId()+1);
+    }
 }

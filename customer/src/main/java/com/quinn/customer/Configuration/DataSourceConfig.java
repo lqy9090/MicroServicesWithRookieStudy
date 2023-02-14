@@ -14,7 +14,7 @@ import java.sql.SQLException;
  * @Description:
  * @DateTime: 2023/2/7 16:23
  **/
-@Configuration
+//@Configuration
 public class DataSourceConfig {
     /**
      * DataSource 配置

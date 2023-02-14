@@ -25,4 +25,9 @@ public record CustomerController(CustomerService customerService) {
         customerService.RegisterCustomer(customerRegistrationRequest);
     }
 
+    @PostMapping("/RegisterAndResetEmail")
+    void RegisterCustomerAnResetPassword( @RequestBody Customer customer) {
+        System.out.println("Request update Customer ...");
+        customerService.RegisterCustomerAnResetEmail(customer);
+    }
 }

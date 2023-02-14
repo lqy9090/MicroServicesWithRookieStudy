@@ -117,8 +117,8 @@ public class CustomerApplicationTest {
     @Test
     void shouldReturnCustomersWithConditionImplementByMethodName() {
         Faker faker = new Faker();
-        for (int i = 0; i < 20; i++) {
-            String firstName = faker.name().firstName();
+        for (int i = 0; i < 5; i++) {
+            String firstName = faker.name().firstName()+"method";
             String lastName = faker.name().lastName();
             String email = String.format("%s.%s@study.edu", firstName, lastName);
             Customer customer = new Customer(firstName, lastName, email);
@@ -126,63 +126,58 @@ public class CustomerApplicationTest {
         }
 
         ClassicCustomersRequest request = new ClassicCustomersRequest(
-                "ali",
+                "method",
                 "judy",
                 "study.edu"
         );
 
-//        List<Customer> customersByCondition = underTest.getCustomersByConditionWithMethodName(request);
-//        System.out.println(customersByCondition);
+//        List<Customer> customers = customerRepository.findAll();
+//        System.out.println(customers);
+
+        List<Customer> customersByCondition = underTest.getCustomersByConditionWithMethodName(request);
+        System.out.println(customersByCondition);
     }
 
     @Test
     void shouldReturnCustomersWithConditionImplementByJPQL() {
-        Customer ali = new Customer(
-                1L,
-                "ali",
-                "ali@ssword",
-                "ali@gmail.com"
-        );
-        Customer ali2 = new Customer(
-                2L,
-                "ali",
-                "ali@ssword",
-                "ali@gmail.com"
-        );
-        customerRepository.saveAll(Arrays.asList(ali, ali2));
+        Faker faker = new Faker();
+        for (int i = 0; i < 5; i++) {
+            String firstName = faker.name().firstName()+"jpql";
+            String lastName = faker.name().lastName();
+            String email = String.format("%s.%s@study.edu", firstName, lastName);
+            Customer customer = new Customer(firstName, lastName, email);
+            customerRepository.save(customer);
+        }
 
-//        ClassicCustomersRequest request = new ClassicCustomersRequest(
-//                "ali",
-//                "ali@gmail.com"
-//        );
-//
-//        List<Customer> customersByCondition = underTest.getCustomersByConditionWithJPQL(request);
-//        System.out.println(customersByCondition);
+        ClassicCustomersRequest request = new ClassicCustomersRequest(
+                "jpql",
+                "judy",
+                "study.edu"
+        );
+
+        List<Customer> customersByCondition = underTest.getCustomersByConditionWithJPQL(request);
+        System.out.println(customersByCondition);
     }
 
     @Test
     void shouldReturnCustomersWithConditionImplementByNativeSQL() {
-        Customer ali = new Customer(
-                1L,
-                "ali",
-                "ali@ssword",
-                "ali@gmail.com"
-        );
-        Customer ali2 = new Customer(
-                2L,
-                "ali",
-                "ali@ssword",
-                "ali@gmail.com"
-        );
-        customerRepository.saveAll(Arrays.asList(ali, ali2));
+        Faker faker = new Faker();
+        for (int i = 0; i < 5; i++) {
+            String firstName = faker.name().firstName()+"nsql";
+            String lastName = faker.name().lastName();
+            String email = String.format("%s.%s@study.edu", firstName, lastName);
+            Customer customer = new Customer(firstName, lastName, email);
+            customerRepository.save(customer);
+        }
 
-//        ClassicCustomersRequest request = new ClassicCustomersRequest(
-//                "ali",
-//                "ali@gmail.com"
-//        );
-//
-//        List<Customer> customersByCondition = underTest.getCustomersByConditionWithNativeSQL(request);
-//        System.out.println(customersByCondition);
+        ClassicCustomersRequest request = new ClassicCustomersRequest(
+                "nsql",
+                "judy",
+                "study.edu"
+        );
+
+        List<Customer> customersByCondition = underTest.getCustomersByConditionWithNativeSQL(request);
+        System.out.println(customersByCondition);
     }
 
 
