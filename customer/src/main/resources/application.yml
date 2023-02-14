@@ -3,22 +3,26 @@ server:
 spring:
     application:
         name: customer
+    security:
+      user:
+        name: actuator
+        password: actuator
     datasource:
-        h2:
-            jdbcUrl: jdbc:h2:mem:testdb-dev-enviroment
-            password: hello
-            username: hello
-        pgsql:
-            jdbcUrl: jdbc:postgresql://localhost:5432/customer
-            password: password
-            username: amigoscode
-    h2:
-        console:
-            enabled: true
-            path: /h2
+#        h2:
+#            jdbcUrl: jdbc:h2:mem:testdb-dev-enviroment
+#            password: hello
+#            username: hello
+#        pgsql:
+          url: jdbc:postgresql://localhost:5432/customer
+          password: password
+          username: amigoscode
+#    h2:
+#        console:
+#            enabled: true
+#            path: /h2
     jpa:
         hibernate:
-            ddl-auto: update
+            ddl-auto: create-drop
         properties:
             hibernate:
                 dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -32,13 +36,13 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: health,info,prometheus
   info:
     env:
       enabled: true
 
 info:
   app:
-    name: MicroService-Customer-Model
-    decription: Spring-Boot-Study-Customer-Model
+    name: MicroService-Customer-Module
+    decription: Spring-Boot-Study-Customer-Module
     version: 1.0.0
