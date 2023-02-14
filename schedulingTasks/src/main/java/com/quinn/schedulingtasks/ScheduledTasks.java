@@ -34,8 +34,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ScheduledTasks {
-	@Autowired
 	TaskScheduler taskScheduler;
+
+	@Autowired
+	public ScheduledTasks(TaskScheduler taskScheduler) {
+		this.taskScheduler = taskScheduler;
+	}
 
 	private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
 
