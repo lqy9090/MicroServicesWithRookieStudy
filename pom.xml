@@ -13,6 +13,7 @@
         <module>fraud</module>
         <module>uploadFiles</module>
         <module>schedulingTasks</module>
+        <module>asyncMethods</module>
     </modules>
 
     <properties>
